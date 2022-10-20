@@ -4,8 +4,8 @@ let roundWinText = document.getElementById("winner")
 let playNextCardButton = document.getElementById("playNextCard")
 let automateButton = document.getElementById("auto")
 let newGameButton = document.getElementById("new_game")
-let oppCurrentCard = document.getElementById("oppCard")
-let yourCurrentCard = document.getElementById("yourCard")
+let oppCurrentCard = document.getElementById("oppCardImg")
+let yourCurrentCard = document.getElementById("yourCardImg")
 
 let h1 = document.getElementById("name")
 let name = window.prompt("Enter your name")
@@ -70,53 +70,52 @@ class Card {
     constructor(value, suit) {
         this.value = value
         this.suit = suit
-        this.color = ""
-        this.isFace = null
-        this.face = ""
-        this.display = ""
     }
-    setColor(suit) {
-        switch (suit) {
+
+    initCard() {
+
+        //SetColo
+        switch (this.suit) {
             case "Diamonds": this.color = "Red"; break;
             case "Hearts": this.color = "Red"; break;
             case "Spades": this.color = "Black"; break;
             case "Clubs": this.color = "Black"; break;
             default: this.color = "";
         }
-    }
-    initFace() {
+
+        //initFace
         switch (this.value) {
             case 14: {
                 this.isFace = true;
-                this.face = 'A';
+                this.face = 'ace';
                 this.display = this.face;
                 break;
             }
             case 11: {
                 this.isFace = true;
-                this.face = 'J';
+                this.face = 'jack';
                 this.display = this.face;
                 break;
             }
             case 12: {
                 this.isFace = true;
-                this.face = 'Q';
+                this.face = 'queen';
                 this.display = this.face;
                 break;
             }
             case 13: {
                 this.isFace = true;
-                this.face = 'K';
+                this.face = 'king';
                 this.display = this.face;
                 break;
             }
             default: {
                 this.isFace = false;
-                this.face = '';
                 this.display = this.value;
                 break;
             }
         }
+        this.res = `./assets/SVG/${this.display}_of_${this.suit}.svg`
     }
 }
 
@@ -157,9 +156,8 @@ const makeCardDeck = (deck, cards, suits) => {
     for (let i = 0; i < cards.length; i++) {
         for (let ii = 0; ii < suits.length; ii++) {
             const NewCard = new Card(cardList[i], suitList[ii])
-            NewCard.setColor(NewCard.suit)
+            NewCard.initCard()
             deck.cardsInDeck.push(NewCard)
-            NewCard.initFace()
         }
     }
 
@@ -205,8 +203,11 @@ const playNextCard = () => {
         You.pullCard()
         Opp.pullCard()
 
-        yourCurrentCard.innerText = You.currentCard.display
-        oppCurrentCard.innerText = Opp.currentCard.display
+        yourCurrentCard.src = You.currentCard.res
+        oppCurrentCard.src = Opp.currentCard.res
+
+        console.log(`YOU:\n${You.currentCard.value}`);
+        console.log(`OPP:\n${Opp.currentCard.value}`);
 
         compare(You.currentCard, Opp.currentCard)
 
