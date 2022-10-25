@@ -20,6 +20,14 @@ const suitList = ["Diamonds", "Hearts", "Spades", "Clubs"]
 
 
 
+function wait(ms) {
+    var start = Date.now(),
+        now = start;
+    while (now - start < ms) {
+      now = Date.now();
+    }
+}
+
 
 
 
@@ -367,8 +375,9 @@ const compare = (yourCard, oppCard) => {
 
 
 const AUTOMATE = () => {
+    var counter =0
     while (Opp.cardsInHand.length > 0 && You.cardsInHand.length > 0) {
-        playNextCard()
+        setTimeout(playNextCard,10)
     }
     playNextCard()
 }
