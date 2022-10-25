@@ -11,6 +11,8 @@ body{
     justify-content: center;
 
     background-image: linear-gradient(to right bottom, #154c3b, #146c43, #2e8d41, #58ad33, #8dcb00);
+    height: 100%;
+    width: 100%;
 }
 
 .info{

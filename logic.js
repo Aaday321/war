@@ -16,7 +16,7 @@ let isDup = false
 let deckSize = 0
 
 const cardList = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-const suitList = ["Diamonds", "Hearts", "Spades", "Clubs"]
+const suitList = ["diamonds", "hearts", "spades", "clubs"]
 
 
 
@@ -84,10 +84,10 @@ class Card {
 
         //SetColo
         switch (this.suit) {
-            case "Diamonds": this.color = "Red"; break;
-            case "Hearts": this.color = "Red"; break;
-            case "Spades": this.color = "Black"; break;
-            case "Clubs": this.color = "Black"; break;
+            case "diamonds": this.color = "Red"; break;
+            case "hearts": this.color = "Red"; break;
+            case "spades": this.color = "Black"; break;
+            case "clubs": this.color = "Black"; break;
             default: this.color = "";
         }
 
@@ -214,8 +214,9 @@ const playNextCard = () => {
         yourCurrentCard.src = You.currentCard.res
         oppCurrentCard.src = Opp.currentCard.res
 
-        console.log(`YOU:\n${You.currentCard.value}`);
-        console.log(`OPP:\n${Opp.currentCard.value}`);
+        //console.log(`YOU:\n${You.currentCard.res}`);
+        //console.log(`OPP:\n${Opp.currentCard.res}`);
+
 
         compare(You.currentCard, Opp.currentCard)
 
@@ -376,8 +377,12 @@ const compare = (yourCard, oppCard) => {
 
 const AUTOMATE = () => {
     var counter =0
-    while (Opp.cardsInHand.length > 0 && You.cardsInHand.length > 0) {
-        setTimeout(playNextCard,10)
+    if (Opp.cardsInHand.length > 0 && You.cardsInHand.length > 0) {
+        playNextCard()
+        //setTimeout(AUTOMATE,0)
+        //wait(50)
+        requestAnimationFrame(AUTOMATE)
+        return
     }
     playNextCard()
 }
