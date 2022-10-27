@@ -6,6 +6,8 @@ let automateButton = document.getElementById("auto")
 let newGameButton = document.getElementById("new_game")
 let oppCurrentCard = document.getElementById("oppCardImg")
 let yourCurrentCard = document.getElementById("yourCardImg")
+let you_DOM = document.getElementById("you")
+let opp_DOM = document.getElementById("opp")
 
 let h1 = document.getElementById("name")
 let name = window.prompt("Enter your name")
@@ -14,6 +16,9 @@ let cardDeckCatcher = []
 let isDup = false
 
 let deckSize = 0
+
+let warDomElements_you = new Array()
+let warDomElements_opp = new Array()
 
 const cardList = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 const suitList = ["diamonds", "hearts", "spades", "clubs"]
@@ -206,6 +211,9 @@ console.log(MyDeck.cardsInDeck)
 
 
 const playNextCard = () => {
+    
+
+    renderWarCards({action: "remove"})
 
     if (You.cardsInHand.length > 0 && Opp.cardsInHand.length > 0) {
         You.pullCard()
@@ -238,11 +246,44 @@ const playNextCard = () => {
 /*                                         I DECLARE WAR FUNCTIONS START                            */
 //First Call - 1
 const iDeclareWar_V3 = () => {
+    
     drawWarCards(You)
     console.log(You.cardsInPlay);
     drawWarCards(Opp)
     console.log(Opp.cardsInPlay);
     compareTie()
+}
+
+const renderWarCards = (PARAMS) =>{
+    
+    if(PARAMS.action !== "remove"){
+        PARAMS.element.src = PARAMS.card.res
+        if(PARAMS.PLAYER.name !== "Opp")warDomElements_you.push(PARAMS.element)
+        if(PARAMS.PLAYER.name === "Opp")warDomElements_opp.push(PARAMS.element)
+    }else{
+        for(let i of warDomElements_opp){
+            i.remove()
+        }
+
+        warDomElements_opp = []
+        for(let i of warDomElements_you){
+            i.remove()
+        }
+
+        warDomElements_you = []
+        return
+    }
+    
+    if(PARAMS.PLAYER.name === "Opp"){
+        if(warDomElements_opp.length > 0){
+            opp_DOM.appendChild(PARAMS.element)
+        }
+        
+    }else{
+        if(warDomElements_you.length > 0){
+            you_DOM.appendChild(PARAMS.element)
+        }
+    }
 }
 
 // Second call - 2
@@ -265,6 +306,10 @@ const drawWarCards = (PLAYER) => {
         } else if (PLAYER.cardsInHand.length > 0) {
             PLAYER.cardsInPlay.push(PLAYER.cardsInHand[i])
             PLAYER.lastIDcW_index++
+
+                const newImg = document.createElement("img")
+                renderWarCards({PLAYER:PLAYER, card:PLAYER.cardsInHand[i], element:newImg})
+
             //This conditional is for when the player is out of cards
         } else if (PLAYER.cardsInHand.length === 0) {
             console.log(`${PLAYER} is out of cards`);
@@ -276,10 +321,12 @@ const drawWarCards = (PLAYER) => {
 //Compare - 4
 const compareTie = () => {
     if (You.cardsInPlay[You.cardsInPlay.length - 1].value > Opp.cardsInPlay[Opp.cardsInPlay.length - 1].value) {
+        roundWinText.innerHTML += "<br/> You win the war!"
         takeCards(You, Opp)
         clearPLAYER(You)
         clearPLAYER(Opp)
     } else if (You.cardsInPlay[You.cardsInPlay.length - 1].value < Opp.cardsInPlay[Opp.cardsInPlay.length - 1].value) {
+        roundWinText.innerHTML += "<br/> You win the war!"
         takeCards(Opp, You)
         clearPLAYER(You)
         clearPLAYER(Opp)
@@ -340,7 +387,7 @@ const shuffleCardsInPlay = (PLAYER) => {
 
 const compare = (yourCard, oppCard) => {
 
-    roundWinText.innerText = "I Declare War"
+    roundWinText.innerHTML = " <center>I Declare War</center>"
 
     let winner = []
 
