@@ -8,10 +8,13 @@ let oppCurrentCard = document.getElementById("oppCardImg")
 let yourCurrentCard = document.getElementById("yourCardImg")
 let you_DOM = document.getElementById("you")
 let opp_DOM = document.getElementById("opp")
+let you_score = document.getElementById("you_score")
+let opp_score = document.getElementById("opp_score")  
 
-let h1 = document.getElementById("name")
-let name = window.prompt("Enter your name")
 let cardDeckCatcher = []
+
+yourCurrentCard.src = "./assets/SVG/black_joker.svg"
+oppCurrentCard.src = "./assets/SVG/red_joker.svg"
 
 let isDup = false
 
@@ -156,10 +159,8 @@ class Deck {
 //DECK init
 let MyDeck = new Deck()
 //PLAYER inits
-const You = new Player(name)
+const You = new Player("You")
 const Opp = new Player("Opp")
-//Display name
-h1.innerText = "Your name: " + name
 
 
 
@@ -212,8 +213,7 @@ console.log(MyDeck.cardsInDeck)
 
 const playNextCard = () => {
     
-
-    renderWarCards({action: "remove"})
+    if(You.cardsInHand.length > 0 && Opp.cardsInHand.length > 0)renderWarCards({action: "remove"})
 
     if (You.cardsInHand.length > 0 && Opp.cardsInHand.length > 0) {
         You.pullCard()
@@ -222,17 +222,27 @@ const playNextCard = () => {
         yourCurrentCard.src = You.currentCard.res
         oppCurrentCard.src = Opp.currentCard.res
 
-        //console.log(`YOU:\n${You.currentCard.res}`);
-        //console.log(`OPP:\n${Opp.currentCard.res}`);
-
 
         compare(You.currentCard, Opp.currentCard)
 
-        console.log(`You: ${You.cardsInHand.length} Opp: ${Opp.cardsInHand.length}`)
+        you_score.innerText = `You: ${You.cardsInHand.length}`.toUpperCase()
+        opp_score.innerText = `Opponent: ${Opp.cardsInHand.length}`.toUpperCase()
+        // console.log(`You: ${You.cardsInHand.length} Opp: ${Opp.cardsInHand.length}`)
     } else if (You.cardsInHand.length === 0) {
-        window.alert("YOU LOSE!")
+        roundWinText.innerHTML = "GAME OVER!"
+        roundWinText.style.fontSize = "3rem"
+        document.getElementById("TITLE").innerText = "YOU LOSE!"
+
     } else if (Opp.cardsInHand.length === 0) {
-        window.alert("YOU WIN!")
+        roundWinText.innerHTML = "GAME OVER!"
+        roundWinText.style.fontSize = "3rem"
+        document.getElementById("TITLE").innerText = "YOU WIN!"
+    }
+
+    if(You.cardsInHand.length === 0 || Opp.cardsInHand.length === 0){
+        console.log("condition met");
+        playNextCardButton.remove()
+        automateButton.remove()
     }
 
 }
@@ -244,6 +254,25 @@ const playNextCard = () => {
 
 
 /*                                         I DECLARE WAR FUNCTIONS START                            */
+
+//Shuffle hand if we have too many ties
+const shuffleCardsInPlay = (PLAYER) => {
+    if (PLAYER.cardsInPlay.length === 1) {
+        return
+    }
+    console.log("Deck was shuffled!")
+    let reorder = []
+    for (i = 0; i < cardsInPlay; i++) {
+        rando = Math.floor(Math.random() * cardsInPlay.length)
+        if (reorder.includes(cardsInPlay[rando]) === true) {
+            i--
+        } else {
+            reorder.push(cardsInPlay[rando])
+        }
+    }
+    PLAYER.cardsInPlay = reorder
+}
+
 //First Call - 1
 const iDeclareWar_V3 = () => {
     
@@ -256,10 +285,12 @@ const iDeclareWar_V3 = () => {
 
 const renderWarCards = (PARAMS) =>{
     
+    
     if(PARAMS.action !== "remove"){
         PARAMS.element.src = PARAMS.card.res
         if(PARAMS.PLAYER.name !== "Opp")warDomElements_you.push(PARAMS.element)
         if(PARAMS.PLAYER.name === "Opp")warDomElements_opp.push(PARAMS.element)
+        if(PARAMS.PLAYER.currentCard === PARAMS.card)return
     }else{
         for(let i of warDomElements_opp){
             i.remove()
@@ -274,6 +305,9 @@ const renderWarCards = (PARAMS) =>{
         return
     }
     
+
+    
+
     if(PARAMS.PLAYER.name === "Opp"){
         if(warDomElements_opp.length > 0){
             opp_DOM.appendChild(PARAMS.element)
@@ -326,7 +360,7 @@ const compareTie = () => {
         clearPLAYER(You)
         clearPLAYER(Opp)
     } else if (You.cardsInPlay[You.cardsInPlay.length - 1].value < Opp.cardsInPlay[Opp.cardsInPlay.length - 1].value) {
-        roundWinText.innerHTML += "<br/> You win the war!"
+        roundWinText.innerHTML += "<br/> Your opponent won the war!"
         takeCards(Opp, You)
         clearPLAYER(You)
         clearPLAYER(Opp)
@@ -358,23 +392,7 @@ const clearPLAYER = (PLAYER) => {
 }
 
 
-//Shuffle hand if we have too many ties
-const shuffleCardsInPlay = (PLAYER) => {
-    if (PLAYER.cardsInPlay.length === 1) {
-        return
-    }
-    console.log("Deck was shuffled!")
-    let reorder = []
-    for (i = 0; i < cardsInPlay; i++) {
-        rando = Math.floor(Math.random() * cardsInPlay.length)
-        if (reorder.includes(cardsInPlay[rando]) === true) {
-            i--
-        } else {
-            reorder.push(cardsInPlay[rando])
-        }
-    }
-    PLAYER.cardsInPlay = reorder
-}
+
 
 /*                                 I DECLARE WAR FUNCTIONS END                              */
 
@@ -417,7 +435,7 @@ const compare = (yourCard, oppCard) => {
         Opp.addCard(oppCard)
 
     }
-    roundWinText.innerText = `${winner[0]} ${winner[1]}`
+    roundWinText.innerText = `${winner[0]} ${winner[1]}`.toUpperCase()
 }
 
 
@@ -435,13 +453,24 @@ const AUTOMATE = () => {
 }
 
 const newGame = () => {
+    document.getElementById("TITLE").innerHTML = "WAR!"
+    roundWinText.style.fontSize = "1.5rem"
+
+    newGameButton.remove()
+    document.getElementById("controls").appendChild(playNextCardButton)
+    document.getElementById("controls").appendChild(automateButton)
+    document.getElementById("controls").appendChild(newGameButton)
+
+    renderWarCards({action: "remove"})
+    yourCurrentCard.src = "./assets/SVG/black_joker.svg"
+    oppCurrentCard.src = "./assets/SVG/red_joker.svg"
     You.resetPlayer()
     Opp.resetPlayer()
     makeCardDeck(MyDeck, cardList, suitList)
     deckSize = MyDeck.length
     splitTheDeck(MyDeck)
     console.clear();
-    setTimeout(() => { console.log("New Game!"); }, 1500)
+    console.log("New Game!")
 }
 
 

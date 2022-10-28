@@ -1,7 +1,17 @@
+
+@font-face {
+    font-family: TheFont;
+    src: url("./assets/LuckiestGuy-Regular.ttf");
+}
 *{
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: TheFont;
+    color: white;
     padding: 0;
     margin: 0;
+}
+
+h1{
+    font-size: 5rem;
 }
 
 body{
@@ -9,8 +19,11 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
+    margin: 0;
     background-image: linear-gradient(to right bottom, #154c3b, #146c43, #2e8d41, #58ad33, #8dcb00);
+    background-size: cover;
+    background-attachment: fixed;
+
     height: 100%;
     width: 100%;
 }
@@ -23,12 +36,13 @@ body{
     
 }
 .controls{
-   
+   flex-wrap: wrap;
     display: flex;
+    justify-content: center;
 }
 .cards{
     display: flex;
-    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     
@@ -82,3 +96,18 @@ button:hover {
     width: 3rem;
     padding: 0.25rem;
 }
+
+@media only screen and (max-width: 600px) {
+    body {
+      display: block;
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin-top: 2rem;
+    }
+    .hand{
+        width: 6rem;
+    }
+    .hand img{
+        width: 8rem;
+    }
+  }

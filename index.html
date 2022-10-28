@@ -1,5 +1,8 @@
 <html>
 <head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="stylesheet" href="./war.css">
    <title>WAR!</title>
 </head>
@@ -7,10 +10,9 @@
 <body>
 
    <div class="info">
-      <h1>WAR</h1> 
-      <h3 id="name">YOUR NAME HERE</h3>
+      <h1 id="TITLE" >WAR!</h1> 
    </div>
-   <div class="controls">
+   <div class="controls" id="controls">
       <button id="playNextCard">Play Next Card</button>
       <button id="auto">Automate To End</button>
       <button id="new_game">New Game</button>
@@ -21,14 +23,14 @@
    <div class="cards">
 
       <div class="hand" >
-         <h3>Your Card:</h3>
+         <h3 id="you_score">Your Card:</h3>
          <img id="yourCardImg" src="./assets/SVG/3_of_clubs.svg">
          <div id="you" class="under"></div>
 
       </div>
 
       <div class="hand">
-         <h3>Opponent's Card:</h3>
+         <h3 id="opp_score">Opponent's Card:</h3>
          <img id="oppCardImg" src="./assets/SVG/5_of_clubs.svg">
          <div id="opp" class="under"></div>
       </div>
